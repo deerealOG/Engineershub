@@ -66,6 +66,13 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.company-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .company-card__header {
@@ -101,6 +108,8 @@
 
 .company-card__rating {
   color: #e5e5e5;
+  display: flex;
+  gap: 2px;
 }
 
 .company-card__rating .star.filled {
@@ -151,4 +160,102 @@
 
 .company-reviews__cta {
     margin-top: var(--spacing-lg);
+}
+
+/* Modal Content Styling */
+.company-modal__header-info {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  align-items: center;
+}
+
+.company-modal__logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  background: var(--color-bg-light);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+}
+
+.company-modal__industry {
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xs);
+}
+
+.company-modal__rating {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.company-modal__rating .star {
+  color: #e5e5e5;
+}
+
+.company-modal__rating .star.filled {
+  color: #f59e0b;
+}
+
+.company-modal__reviews-count {
+  margin-left: var(--spacing-xs);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.company-modal__description {
+  margin-bottom: var(--spacing-xl);
+}
+
+.company-modal__description h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-dark);
+}
+
+.company-modal__description p {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.company-modal__stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+  background: var(--color-bg-light);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+}
+
+.company-modal__stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.company-modal__stat .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.company-modal__stat .value {
+  font-weight: 500;
+  color: var(--color-text-dark);
+}
+
+.company-modal__stat .link {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .company-modal__stats-grid {
+    grid-template-columns: 1fr;
+  }
 }

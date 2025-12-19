@@ -6,3 +6,4 @@ export { Checkbox } from './Checkbox';
 export { FileUpload } from './FileUpload';
 export { Stepper } from './Stepper';
 export { SocialButtons } from './SocialButtons';
+export { Modal } from './Modal';
