@@ -1,0 +1,21 @@
+.social-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.social-buttons .btn--social {
+  flex: 1;
+  padding: var(--spacing-md);
+  border-radius: 50px;
+}
+
+.social-buttons .btn__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+@media (max-width: 480px) {
+  .social-buttons {
+    flex-direction: column;
+  }
+}

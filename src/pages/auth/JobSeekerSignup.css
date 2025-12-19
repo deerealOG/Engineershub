@@ -1,0 +1,100 @@
+.jobseeker-signup__left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 435px;
+}
+.jobseeker-signup__left h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: var(--spacing-sm);
+}
+
+.jobseeker-signup__left p {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.jobseeker-signup__members {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+}
+
+.jobseeker-signup__count {
+  font-size: 0.875rem;
+}
+
+.jobseeker-signup {
+  width: 100%;
+}
+
+.jobseeker-signup__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.jobseeker-signup__header p {
+  font-size: 0.875rem;
+  color: var(--color-text-dark);
+}
+
+.jobseeker-signup__form-card {
+  background-color: var(--color-bg-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.jobseeker-signup__form-card h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  text-align: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.jobseeker-signup__subtitle {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xl);
+}
+
+.jobseeker-signup__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.jobseeker-signup__signin {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  font-size: 0.875rem;
+  color: var(--color-text-dark);
+}
+
+.jobseeker-signup__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.jobseeker-signup__divider::before,
+.jobseeker-signup__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.jobseeker-signup__divider span {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}

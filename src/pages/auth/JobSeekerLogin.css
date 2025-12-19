@@ -1,0 +1,45 @@
+.jobseeker-login {
+  width: 100%;
+  background-color: '#e9e9ef'
+}
+
+.jobseeker-login__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.jobseeker-login__card {
+  background-color: var(--color-bg-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.jobseeker-login__card h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  text-align: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.jobseeker-login__subtitle {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xl);
+}
+
+.jobseeker-login__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.jobseeker-login__signup {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  font-size: 0.875rem;
+  color: var(--color-text-dark);
+}

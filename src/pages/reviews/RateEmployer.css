@@ -1,0 +1,183 @@
+.rate-employer-page {
+  padding: var(--spacing-xl);
+  min-height: calc(100vh - 80px);
+  background-color: white;
+}
+
+.rate-employer__container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.rate-employer__header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.rate-employer__header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.rate-employer__header p {
+  color: var(--color-text-muted);
+}
+
+.rate-employer__search {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.rate-employer__search-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-dark);
+}
+
+.rate-employer__search-input-group {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.rate-employer__search-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.rate-employer__search-icon {
+    position: absolute;
+    left: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+}
+
+.rate-employer__search-input {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) 48px;
+    border: 1px solid var(--color-text-muted); /* Used a darker border in image */
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    outline: none;
+}
+
+.rate-employer__search-input:focus {
+    border-color: var(--color-primary);
+}
+
+.btn-find-company {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.rate-employer__details h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-xl);
+    color: var(--color-text-dark);
+}
+
+.rate-employer__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .rate-employer__footer {
+        flex-direction: column-reverse; /* Stack buttons, submit on top? No, usually primary action prominent. */
+        gap: var(--spacing-md);
+        align-items: stretch; /* Full width buttons */
+    }
+    
+    .btn-submit-review, .btn-return-home {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .rate-employer__search-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-find-company {
+        width: 100%;
+    }
+
+    .rate-employer-page {
+        padding: var(--spacing-md);
+    }
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--color-text-dark);
+}
+
+.form-input, .form-textarea {
+    padding: var(--spacing-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    font-size: 1rem;
+    width: 100%;
+    background-color: white;
+}
+.form-input::placeholder, .form-textarea::placeholder {
+    color: #9ca3af;
+}
+
+.form-textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.rate-employer__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-xl);
+}
+
+.btn-submit-review {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-md) 80px;
+    border-radius: 30px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-style: italic;
+}
+
+.btn-return-home {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--color-text-dark);
+}

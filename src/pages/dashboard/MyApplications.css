@@ -1,0 +1,231 @@
+.my-applications {
+  padding: var(--spacing-xl);
+}
+
+.my-applications__container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.my-applications h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Tabs */
+.my-applications__tabs {
+  display: flex;
+  gap: var(--spacing-xl);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--spacing-xl);
+}
+
+.my-applications__tab {
+  padding: var(--spacing-md) 0;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.my-applications__tab:hover {
+  color: var(--color-text-dark);
+}
+
+.my-applications__tab--active {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.my-applications__tab--active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-accent);
+}
+
+/* Job Cards */
+.my-applications__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.job-card {
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-white);
+}
+
+.job-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.job-card__company {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.job-card__logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+.job-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin-bottom: var(--spacing-xs);
+}
+
+.job-card__company-name {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.job-card__date {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.job-card__meta {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+.job-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.job-card__meta-item svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.job-card__description {
+  font-size: 0.875rem;
+  color: var(--color-text-dark);
+  line-height: 1.5;
+  margin-bottom: var(--spacing-md);
+}
+
+.job-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.job-card__tag {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: #e5e5e5;
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  font-style: italic;
+}
+
+.job-card__status {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.job-card__status--applied {
+  background-color: var(--color-success);
+  color: white;
+}
+
+/* Pagination */
+.my-applications__pagination {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.my-applications__page {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--color-text-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.my-applications__page:hover {
+  background-color: var(--color-bg-light);
+}
+
+.my-applications__page--active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.my-applications__page svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Return Link */
+.my-applications__return {
+  display: block;
+  color: var(--color-text-dark);
+  font-size: 0.875rem;
+}
+
+.my-applications__return:hover {
+  color: var(--color-accent);
+}
+
+.my-applications__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+  text-align: center;
+  background-color: var(--color-bg-white);
+}
+
+.my-applications__empty img {
+  margin-bottom: var(--spacing-lg);
+  width: 100%;
+}
+
+.my-applications__empty p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #262262;
+}

@@ -1,0 +1,154 @@
+.company-reviews {
+  padding: var(--spacing-xl);
+}
+
+.company-reviews__container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.company-reviews__header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.company-reviews__header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  margin-bottom: var(--spacing-sm);
+}
+
+.company-reviews h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: #5e5656;
+}
+
+.company-reviews__header p {
+  color: var(--color-text-muted);
+}
+
+.company-reviews__search {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-2xl);
+  background: white;
+  border-radius: 10px;
+}
+
+.company-reviews__search .input-group {
+  flex: 1;
+}
+.company-reviews__search button {
+  border-radius: 10px;
+}
+
+.company-reviews__section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text-dark);
+}
+
+.company-reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.company-card {
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.company-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.company-card__header img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.company-card__info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.company-card__info p {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.company-card__stats {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.company-card__rating {
+  color: #e5e5e5;
+}
+
+.company-card__rating .star.filled {
+  color: #f59e0b;
+}
+
+.company-card__reviews {
+  font-size: 0.75rem;
+  color: var(--color-text-blue);
+}
+
+.company-card__links {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.company-card__links button {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.company-card__links button:hover {
+  color: var(--color-primary);
+}
+
+.company-reviews__pagination {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.company-reviews__pagination button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.company-reviews__pagination button.active {
+    background: #e9e9ef;
+}
+
+.company-reviews__cta {
+    margin-top: var(--spacing-lg);
+}
