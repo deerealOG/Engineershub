@@ -18,7 +18,7 @@ export function RecruiterLogin() {
     e.preventDefault();
     console.log('Recruiter login:', formData);
     login('company');
-    navigate('/jobs');
+    navigate('/recruiter/dashboard');
   };
 
   return (

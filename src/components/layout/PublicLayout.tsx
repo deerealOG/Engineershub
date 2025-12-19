@@ -30,8 +30,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           </nav>
           
           <div className="public-header__actions">
-            <Link to="/" className="public-header__login">Log In</Link>
-            <Link to="/" className="public-header__signup">Sign Up</Link>
+            <Link to="/login" className="public-header__login">Log In</Link>
+            <Link to="/role-selection" className="public-header__signup">Sign Up</Link>
           </div>
           
           <button 
@@ -66,8 +66,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
         </nav>
         <div className="public-mobile-menu__actions">
-          <Link to="/" className="public-header__login" onClick={() => setIsMobileMenuOpen(false)}>Log In</Link>
-          <Link to="/" className="public-header__signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
+          <Link to="/login" className="public-header__login" onClick={() => setIsMobileMenuOpen(false)}>Log In</Link>
+          <Link to="/role-selection" className="public-header__signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
         </div>
       </div>
 

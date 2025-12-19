@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '../../components/layout';
 import './RecruiterDashboard.css';
 
@@ -114,13 +114,32 @@ const getIcon = (icon: string) => {
 };
 
 export function RecruiterDashboard() {
+  const navigate = useNavigate();
+
   return (
     <DashboardLayout>
       <div className="recruiter-dashboard">
         {/* Header */}
         <div className="recruiter-dashboard__header">
-          <h1>Recruiter Dashboard</h1>
-          <p>Welcome back! Here's what's happening with your job listings.</p>
+          <div className="recruiter-dashboard__title">
+            <h1>Recruiter Dashboard</h1>
+            <p>Welcome back! Here's what's happening with your job listings.</p>
+          </div>
+          <Link to="/recruiter/jobs/new" className="recruiter-dashboard__post-btn">
+            Post a Job
+          </Link>
+        </div>
+
+        {/* Welcome Banner / Onboarding Shortcut */}
+        <div className="recruiter-welcome-banner">
+          <div className="recruiter-welcome-banner__content">
+            <h2>Welcome to EngineersHub! 🚀</h2>
+            <p>Complete your company profile and post your first job to start receiving applications from top engineering talent.</p>
+            <div className="recruiter-welcome-banner__actions">
+              <Link to="/recruiter/jobs/new" className="recruiter-banner-btn primary">Post Your First Job</Link>
+              <Link to="/recruiter/company" className="recruiter-banner-btn secondary">Complete Profile</Link>
+            </div>
+          </div>
         </div>
 
         {/* Stats */}
@@ -211,13 +230,21 @@ export function RecruiterDashboard() {
                     <span className="recruiter-applicant-card__job">Applied for: {applicant.job}</span>
                   </div>
                   <div className="recruiter-applicant-card__actions">
-                    <button className="recruiter-applicant-card__action" title="View Profile">
+                    <button 
+                        className="recruiter-applicant-card__action" 
+                        title="View Profile"
+                        onClick={() => navigate('/recruiter/applicants')}
+                    >
                       <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                         <circle cx="12" cy="12" r="3" />
                       </svg>
                     </button>
-                    <button className="recruiter-applicant-card__action" title="Message">
+                    <button 
+                        className="recruiter-applicant-card__action" 
+                        title="Message"
+                        onClick={() => navigate('/recruiter/messages')}
+                    >
                       <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
                       </svg>
@@ -273,7 +300,7 @@ export function RecruiterDashboard() {
                     <p>Edit your job listings</p>
                   </div>
                 </Link>
-                <Link to="/messages" className="recruiter-quick-action">
+                <Link to="/recruiter/messages" className="recruiter-quick-action">
                   <div className="recruiter-quick-action__icon">
                     <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                       <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />

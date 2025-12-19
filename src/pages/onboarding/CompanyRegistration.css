@@ -197,6 +197,25 @@
 
 .company-registration__actions {
   margin-top: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.company-registration__skip {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: all 0.2s;
+}
+
+.company-registration__skip:hover {
+  text-decoration: underline;
 }
 
 .company-registration__login {

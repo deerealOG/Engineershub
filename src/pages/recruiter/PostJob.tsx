@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { DashboardLayout } from '../../components/layout';
 import './PostJob.css';
 
@@ -9,14 +9,16 @@ const BENEFITS_OPTIONS = [
 ];
 
 export function PostJob() {
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isEditing, setIsEditing] = useState(false);
   const [tags, setTags] = useState<string[]>(['Mechanical Engineering']);
   const [selectedBenefits, setSelectedBenefits] = useState<string[]>(['Health Insurance', 'Pension']);
   const [formData, setFormData] = useState({
     title: '',
     location: '',
-    type: '',
-    experience: '',
+    type: 'full-time',
+    experience: 'mid-level',
     salaryMin: '',
     salaryMax: '',
     description: '',
@@ -24,6 +26,22 @@ export function PostJob() {
     requirements: '',
     deadline: ''
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const editId = params.get('edit');
+    if (editId) {
+      setIsEditing(true);
+      // In a real app, we would fetch the job data here
+      // Mocking data for now
+      setFormData(prev => ({
+        ...prev,
+        title: 'Senior Mechanical Engineer',
+        location: 'Lagos, Nigeria',
+        type: 'full-time'
+      }));
+    }
+  }, [location]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -76,8 +94,8 @@ export function PostJob() {
                 <path d="M22 4L12 14.01l-3-3" />
               </svg>
             </div>
-            <h2>Job Posted Successfully!</h2>
-            <p>Your job listing is now live and visible to thousands of engineering professionals.</p>
+            <h2>{isEditing ? 'Job Updated Successfully!' : 'Job Posted Successfully!'}</h2>
+            <p>{isEditing ? 'Your changes have been saved and the listing has been updated.' : 'Your job listing is now live and visible to thousands of engineering professionals.'}</p>
             <div className="post-job-success__actions">
               <Link to="/recruiter/jobs" className="post-job-success__btn-primary">
                 View My Jobs
@@ -97,8 +115,8 @@ export function PostJob() {
       <div className="post-job-page">
         {/* Header */}
         <div className="post-job-header">
-          <h1>Post a New Job</h1>
-          <p>Create a job listing to attract top engineering talent</p>
+          <h1>{isEditing ? 'Edit Job Listing' : 'Post a New Job'}</h1>
+          <p>{isEditing ? 'Update the details for your job listing' : 'Create a job listing to attract top engineering talent'}</p>
         </div>
 
         {/* Progress */}
@@ -414,7 +432,7 @@ export function PostJob() {
                 Save as Draft
               </button>
               <button type="button" className="post-job-next-btn" onClick={handleNext}>
-                {currentStep === 3 ? 'Publish Job' : 'Continue'}
+                {currentStep === 3 ? (isEditing ? 'Save Changes' : 'Publish Job') : 'Continue'}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>

@@ -1,80 +1,108 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DashboardLayout } from '../../components/layout';
+import { Modal, Button, Input } from '../../components/ui';
+import { useAuth } from '../../context/AuthContext';
 import './Profile.css';
 
-const USER_DATA = {
-  firstName: 'Adebayo',
-  lastName: 'Okonkwo',
-  title: 'Mechanical Engineer',
-  location: 'Lagos, Nigeria',
-  email: 'adebayo.okonkwo@email.com',
-  phone: '+234 801 234 5678',
-  linkedin: 'linkedin.com/in/adebayookonkwo',
-  about: 'Experienced Mechanical Engineer with over 5 years of expertise in the oil and gas industry. Skilled in equipment design, maintenance optimization, and project management. Passionate about sustainable energy solutions and driving operational efficiency in complex industrial environments.',
-  experience: [
-    {
-      id: 1,
-      title: 'Senior Mechanical Engineer',
-      company: 'Shell Petroleum Company',
-      location: 'Lagos, Nigeria',
-      period: 'Jan 2022 - Present',
-      description: 'Lead mechanical engineering projects for offshore platforms. Responsible for equipment reliability and maintenance optimization.'
-    },
-    {
-      id: 2,
-      title: 'Mechanical Engineer',
-      company: 'Total Energies',
-      location: 'Port Harcourt, Nigeria',
-      period: 'Mar 2019 - Dec 2021',
-      description: 'Designed and implemented mechanical systems for refinery operations. Collaborated with cross-functional teams on major upgrade projects.'
-    },
-    {
-      id: 3,
-      title: 'Junior Engineer',
-      company: 'Chevron Nigeria',
-      location: 'Lagos, Nigeria',
-      period: 'Jun 2017 - Feb 2019',
-      description: 'Assisted in the maintenance and troubleshooting of rotating equipment. Gained hands-on experience in field operations.'
-    }
-  ],
-  education: [
-    {
-      id: 1,
-      degree: 'Master of Science in Mechanical Engineering',
-      school: 'University of Lagos',
-      period: '2015 - 2017'
-    },
-    {
-      id: 2,
-      degree: 'Bachelor of Engineering in Mechanical Engineering',
-      school: 'Obafemi Awolowo University',
-      period: '2010 - 2015'
-    }
-  ],
-  skills: [
-    'AutoCAD', 'SolidWorks', 'ANSYS', 'Project Management', 
-    'Equipment Maintenance', 'Technical Documentation', 
-    'Process Optimization', 'Team Leadership', 'ASME Standards',
-    'Root Cause Analysis', 'SAP', 'MS Office'
-  ],
-  resumes: [
-    {
-      id: 1,
-      name: 'Resume_AdebayoOkonkwo_2025.pdf',
-      date: 'Dec 15, 2025',
-      isDefault: true
-    },
-    {
-      id: 2,
-      name: 'CV_Technical_Focus.pdf',
-      date: 'Nov 20, 2025',
-      isDefault: false
-    }
-  ]
-};
+// Default data for when user doesn't have profile info
+const DEFAULT_ABOUT = 'No bio added yet. Click Edit to add information about yourself.';
+
+type ModalType = 'about' | 'experience' | 'education' | 'skills' | null;
 
 export function Profile() {
-  const initials = `${USER_DATA.firstName[0]}${USER_DATA.lastName[0]}`;
+  const { user, updateProfile } = useAuth();
+  const [activeModal, setActiveModal] = useState<ModalType>(null);
+  
+  // Form states for modals
+  const [aboutForm, setAboutForm] = useState('');
+  const [experienceForm, setExperienceForm] = useState({
+    title: '', company: '', location: '', period: '', description: ''
+  });
+  const [educationForm, setEducationForm] = useState({
+    degree: '', school: '', period: ''
+  });
+  const [skillsForm, setSkillsForm] = useState('');
+  
+  // Get profile data from context or use defaults
+  const profile = user?.profile;
+  
+  // Parse name for initials
+  const nameParts = (profile?.fullName || 'User').split(' ');
+  const firstName = nameParts[0] || 'User';
+  const lastName = nameParts.slice(1).join(' ') || '';
+  const initials = firstName[0] + (lastName[0] || '');
+
+  // Use profile data or fallbacks
+  const userData = {
+    firstName,
+    lastName,
+    title: profile?.title || 'Engineer',
+    location: profile?.location || 'Location not set',
+    email: profile?.email || 'email@example.com',
+    phone: profile?.phone || 'Phone not set',
+    linkedin: profile?.linkedin || 'Not provided',
+    about: profile?.about || DEFAULT_ABOUT,
+    experience: profile?.experience || [],
+    education: profile?.education || [],
+    skills: profile?.skills || [],
+    resumes: profile?.resumes || []
+  };
+
+  // Open modal handlers
+  const openAboutModal = () => {
+    setAboutForm(userData.about === DEFAULT_ABOUT ? '' : userData.about);
+    setActiveModal('about');
+  };
+
+  const openExperienceModal = () => {
+    setExperienceForm({ title: '', company: '', location: '', period: '', description: '' });
+    setActiveModal('experience');
+  };
+
+  const openEducationModal = () => {
+    setEducationForm({ degree: '', school: '', period: '' });
+    setActiveModal('education');
+  };
+
+  const openSkillsModal = () => {
+    setSkillsForm(userData.skills.join(', '));
+    setActiveModal('skills');
+  };
+
+  // Save handlers
+  const saveAbout = () => {
+    updateProfile({ about: aboutForm });
+    setActiveModal(null);
+  };
+
+  const saveExperience = () => {
+    const newExp = {
+      id: Date.now(),
+      ...experienceForm
+    };
+    updateProfile({ 
+      experience: [...(profile?.experience || []), newExp] 
+    });
+    setActiveModal(null);
+  };
+
+  const saveEducation = () => {
+    const newEdu = {
+      id: Date.now(),
+      ...educationForm
+    };
+    updateProfile({ 
+      education: [...(profile?.education || []), newEdu] 
+    });
+    setActiveModal(null);
+  };
+
+  const saveSkills = () => {
+    const skillsArray = skillsForm.split(',').map(s => s.trim()).filter(s => s);
+    updateProfile({ skills: skillsArray });
+    setActiveModal(null);
+  };
 
   return (
     <DashboardLayout>
@@ -84,21 +112,21 @@ export function Profile() {
           <div className="profile-header__content">
             <div className="profile-header__avatar">{initials}</div>
             <div className="profile-header__info">
-              <h1>{USER_DATA.firstName} {USER_DATA.lastName}</h1>
-              <p>{USER_DATA.title}</p>
+              <h1>{userData.firstName} {userData.lastName}</h1>
+              <p>{userData.title}</p>
               <div className="profile-header__meta">
                 <span className="profile-header__meta-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
-                  {USER_DATA.location}
+                  {userData.location}
                 </span>
                 <span className="profile-header__meta-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  {USER_DATA.email}
+                  {userData.email}
                 </span>
               </div>
             </div>
@@ -125,7 +153,7 @@ export function Profile() {
                   </svg>
                   About
                 </h2>
-                <button className="profile-section__edit-btn">
+                <button className="profile-section__edit-btn" onClick={openAboutModal}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -133,7 +161,7 @@ export function Profile() {
                   Edit
                 </button>
               </div>
-              <p>{USER_DATA.about}</p>
+              <p>{userData.about}</p>
             </section>
 
             {/* Experience */}
@@ -146,7 +174,7 @@ export function Profile() {
                   </svg>
                   Experience
                 </h2>
-                <button className="profile-section__edit-btn">
+                <button className="profile-section__edit-btn" onClick={openExperienceModal}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="12" y1="5" x2="12" y2="19" />
                     <line x1="5" y1="12" x2="19" y2="12" />
@@ -154,25 +182,29 @@ export function Profile() {
                   Add
                 </button>
               </div>
-              {USER_DATA.experience.map(exp => (
-                <div key={exp.id} className="profile-experience-card">
-                  <div className="profile-experience-card__logo">
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
-                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                      <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
-                    </svg>
-                  </div>
-                  <div className="profile-experience-card__content">
-                    <h3>{exp.title}</h3>
-                    <div className="profile-experience-card__meta">
-                      <span>{exp.company}</span>
-                      <span>{exp.location}</span>
-                      <span>{exp.period}</span>
+              {userData.experience.length > 0 ? (
+                userData.experience.map(exp => (
+                  <div key={exp.id} className="profile-experience-card">
+                    <div className="profile-experience-card__logo">
+                      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                        <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+                      </svg>
                     </div>
-                    <p className="profile-experience-card__description">{exp.description}</p>
+                    <div className="profile-experience-card__content">
+                      <h3>{exp.title}</h3>
+                      <div className="profile-experience-card__meta">
+                        <span>{exp.company}</span>
+                        <span>{exp.location}</span>
+                        <span>{exp.period}</span>
+                      </div>
+                      <p className="profile-experience-card__description">{exp.description}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="profile-section__empty">No experience added yet. Click Add to include your work history.</p>
+              )}
             </section>
 
             {/* Education */}
@@ -185,7 +217,7 @@ export function Profile() {
                   </svg>
                   Education
                 </h2>
-                <button className="profile-section__edit-btn">
+                <button className="profile-section__edit-btn" onClick={openEducationModal}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="12" y1="5" x2="12" y2="19" />
                     <line x1="5" y1="12" x2="19" y2="12" />
@@ -193,20 +225,24 @@ export function Profile() {
                   Add
                 </button>
               </div>
-              {USER_DATA.education.map(edu => (
-                <div key={edu.id} className="profile-education-card">
-                  <div className="profile-education-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
-                      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                      <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                    </svg>
+              {userData.education.length > 0 ? (
+                userData.education.map(edu => (
+                  <div key={edu.id} className="profile-education-card">
+                    <div className="profile-education-card__icon">
+                      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                      </svg>
+                    </div>
+                    <div className="profile-education-card__content">
+                      <h3>{edu.degree}</h3>
+                      <p>{edu.school} • {edu.period}</p>
+                    </div>
                   </div>
-                  <div className="profile-education-card__content">
-                    <h3>{edu.degree}</h3>
-                    <p>{edu.school} • {edu.period}</p>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="profile-section__empty">No education added yet. Click Add to include your educational background.</p>
+              )}
             </section>
 
             {/* Skills */}
@@ -218,7 +254,7 @@ export function Profile() {
                   </svg>
                   Skills
                 </h2>
-                <button className="profile-section__edit-btn">
+                <button className="profile-section__edit-btn" onClick={openSkillsModal}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -226,11 +262,15 @@ export function Profile() {
                   Edit
                 </button>
               </div>
-              <div className="profile-skills">
-                {USER_DATA.skills.map((skill, index) => (
-                  <span key={index} className="profile-skill">{skill}</span>
-                ))}
-              </div>
+              {userData.skills.length > 0 ? (
+                <div className="profile-skills">
+                  {userData.skills.map((skill, index) => (
+                    <span key={index} className="profile-skill">{skill}</span>
+                  ))}
+                </div>
+              ) : (
+                <p className="profile-section__empty">No skills added yet. Click Edit to add your skills.</p>
+              )}
             </section>
           </div>
 
@@ -248,13 +288,13 @@ export function Profile() {
                 <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                   <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span>{USER_DATA.email}</span>
+                <span>{userData.email}</span>
               </div>
               <div className="profile-contact-item">
                 <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
                 </svg>
-                <span>{USER_DATA.phone}</span>
+                <span>{userData.phone}</span>
               </div>
               <div className="profile-contact-item">
                 <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
@@ -262,14 +302,14 @@ export function Profile() {
                   <rect x="2" y="9" width="4" height="12" />
                   <circle cx="4" cy="4" r="2" />
                 </svg>
-                <span>{USER_DATA.linkedin}</span>
+                <span>{userData.linkedin}</span>
               </div>
               <div className="profile-contact-item">
                 <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
-                <span>{USER_DATA.location}</span>
+                <span>{userData.location}</span>
               </div>
             </div>
 
@@ -284,38 +324,172 @@ export function Profile() {
                 </svg>
                 Resume / CV
               </h3>
-              {USER_DATA.resumes.map(resume => (
-                <div key={resume.id} className="profile-resume-item">
-                  <div className="profile-resume-item__icon">
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
-                      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                      <path d="M14 2v6h6" />
-                    </svg>
+              {userData.resumes.length > 0 ? (
+                userData.resumes.map(resume => (
+                  <div key={resume.id} className="profile-resume-item">
+                    <div className="profile-resume-item__icon">
+                      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <path d="M14 2v6h6" />
+                      </svg>
+                    </div>
+                    <div className="profile-resume-item__info">
+                      <h4>{resume.name} {resume.isDefault && '(Default)'}</h4>
+                      <p>Uploaded {resume.date}</p>
+                    </div>
+                    <button className="profile-resume-item__download" aria-label="Download">
+                      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                      </svg>
+                    </button>
                   </div>
-                  <div className="profile-resume-item__info">
-                    <h4>{resume.name} {resume.isDefault && '(Default)'}</h4>
-                    <p>Uploaded {resume.date}</p>
-                  </div>
-                  <button className="profile-resume-item__download" aria-label="Download">
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
-                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
-              <Link to="/resume" className="profile-add-btn">
+                ))
+              ) : (
+                <p className="profile-section__empty">No resumes uploaded yet.</p>
+              )}
+              <Link to="/profile/complete" className="profile-add-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <line x1="5" y1="12" x2="19" y2="12" />
                 </svg>
-                Manage Resumes
+                Upload Resume
               </Link>
             </div>
           </aside>
         </div>
       </div>
+
+      {/* About Modal */}
+      <Modal
+        isOpen={activeModal === 'about'}
+        onClose={() => setActiveModal(null)}
+        title="Edit About"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setActiveModal(null)}>Cancel</Button>
+            <Button onClick={saveAbout}>Save</Button>
+          </>
+        }
+      >
+        <div className="profile-modal-form">
+          <label>About Me</label>
+          <textarea
+            value={aboutForm}
+            onChange={(e) => setAboutForm(e.target.value)}
+            placeholder="Tell us about yourself, your experience, and what you're looking for..."
+            rows={6}
+          />
+        </div>
+      </Modal>
+
+      {/* Experience Modal */}
+      <Modal
+        isOpen={activeModal === 'experience'}
+        onClose={() => setActiveModal(null)}
+        title="Add Experience"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setActiveModal(null)}>Cancel</Button>
+            <Button onClick={saveExperience}>Save</Button>
+          </>
+        }
+      >
+        <div className="profile-modal-form">
+          <Input
+            label="Job Title"
+            value={experienceForm.title}
+            onChange={(e) => setExperienceForm({...experienceForm, title: e.target.value})}
+            placeholder="e.g., Mechanical Engineer"
+          />
+          <Input
+            label="Company"
+            value={experienceForm.company}
+            onChange={(e) => setExperienceForm({...experienceForm, company: e.target.value})}
+            placeholder="e.g., Shell Petroleum"
+          />
+          <Input
+            label="Location"
+            value={experienceForm.location}
+            onChange={(e) => setExperienceForm({...experienceForm, location: e.target.value})}
+            placeholder="e.g., Lagos, Nigeria"
+          />
+          <Input
+            label="Period"
+            value={experienceForm.period}
+            onChange={(e) => setExperienceForm({...experienceForm, period: e.target.value})}
+            placeholder="e.g., Jan 2020 - Present"
+          />
+          <div className="profile-modal-textarea">
+            <label>Description</label>
+            <textarea
+              value={experienceForm.description}
+              onChange={(e) => setExperienceForm({...experienceForm, description: e.target.value})}
+              placeholder="Describe your responsibilities and achievements..."
+              rows={4}
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Education Modal */}
+      <Modal
+        isOpen={activeModal === 'education'}
+        onClose={() => setActiveModal(null)}
+        title="Add Education"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setActiveModal(null)}>Cancel</Button>
+            <Button onClick={saveEducation}>Save</Button>
+          </>
+        }
+      >
+        <div className="profile-modal-form">
+          <Input
+            label="Degree"
+            value={educationForm.degree}
+            onChange={(e) => setEducationForm({...educationForm, degree: e.target.value})}
+            placeholder="e.g., B.Sc. Mechanical Engineering"
+          />
+          <Input
+            label="School"
+            value={educationForm.school}
+            onChange={(e) => setEducationForm({...educationForm, school: e.target.value})}
+            placeholder="e.g., University of Lagos"
+          />
+          <Input
+            label="Period"
+            value={educationForm.period}
+            onChange={(e) => setEducationForm({...educationForm, period: e.target.value})}
+            placeholder="e.g., 2015 - 2019"
+          />
+        </div>
+      </Modal>
+
+      {/* Skills Modal */}
+      <Modal
+        isOpen={activeModal === 'skills'}
+        onClose={() => setActiveModal(null)}
+        title="Edit Skills"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setActiveModal(null)}>Cancel</Button>
+            <Button onClick={saveSkills}>Save</Button>
+          </>
+        }
+      >
+        <div className="profile-modal-form">
+          <label>Skills (comma-separated)</label>
+          <textarea
+            value={skillsForm}
+            onChange={(e) => setSkillsForm(e.target.value)}
+            placeholder="e.g., AutoCAD, Project Management, Safety Engineering, HVAC Systems"
+            rows={4}
+          />
+          <p className="profile-modal-hint">Separate each skill with a comma</p>
+        </div>
+      </Modal>
     </DashboardLayout>
   );
 }

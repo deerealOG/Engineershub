@@ -135,6 +135,7 @@
   outline: none;
   border-color: var(--color-accent);
   box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  border-left: 3px solid var(--color-accent);
 }
 
 /* Toggle */
@@ -298,10 +299,10 @@
   color: white;
 }
 
-/* Save Button */
 .settings-save {
   display: flex;
   justify-content: flex-end;
+  gap: 1rem;
   margin-top: 2rem;
   padding-top: 2rem;
   border-top: 1px solid var(--color-bg-light);
@@ -321,6 +322,25 @@
   background: var(--color-accent-hover);
 }
 
+.settings-save__btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.settings-save__cancel {
+  background: transparent;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.settings-save__cancel:hover {
+  color: var(--color-text-dark);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .settings-layout {
@@ -330,12 +350,31 @@
   .settings-tabs {
     flex-direction: row;
     overflow-x: auto;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.75rem;
+    gap: 0.25rem;
+    /* Thin styled scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) transparent;
+  }
+  
+  .settings-tabs::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .settings-tabs::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .settings-tabs::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 4px;
   }
   
   .settings-tab {
     white-space: nowrap;
     flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
   }
   
   .settings-form__row {
@@ -344,6 +383,20 @@
   
   .settings-avatar {
     flex-direction: column;
+    text-align: center;
+  }
+  
+  .settings-content {
+    padding: 1.5rem;
+  }
+  
+  .settings-save {
+    flex-direction: column;
+  }
+  
+  .settings-save__btn,
+  .settings-save__cancel {
+    width: 100%;
     text-align: center;
   }
 }

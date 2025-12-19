@@ -1,22 +1,63 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../../components/layout';
 import { Logo, Input, Button, SocialButtons } from '../../components/ui';
+import { useAuth } from '../../context/AuthContext';
 import jobSeeker from '../../assets/images/job-seeker-sign-up.webp';
 import jobSeekerTrust from '../../assets/images/job-seeker-trust.webp';
 import './JobSeekerSignup.css';
 
 export function JobSeekerSignup() {
+  const { signup } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Job seeker signup:', formData);
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    // Sign up the user using AuthContext
+    signup('jobseeker', {
+      fullName: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+    });
+
+    // Navigate to profile completion page
+    navigate('/profile/complete');
   };
 
   return (
@@ -60,6 +101,7 @@ export function JobSeekerSignup() {
                   setFormData({ ...formData, fullName: e.target.value })
                 }
                 placeholder="John Doe"
+                error={errors.fullName}
               />
 
               <Input
@@ -69,6 +111,7 @@ export function JobSeekerSignup() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
+                error={errors.email}
               />
 
               <Input
@@ -79,6 +122,7 @@ export function JobSeekerSignup() {
                   setFormData({ ...formData, password: e.target.value })
                 }
                 helperText="At least 8 characters"
+                error={errors.password}
               />
 
               <Input
@@ -88,6 +132,7 @@ export function JobSeekerSignup() {
                 onChange={(e) =>
                   setFormData({ ...formData, confirmPassword: e.target.value })
                 }
+                error={errors.confirmPassword}
               />
             </div>
 

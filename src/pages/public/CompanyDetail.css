@@ -1,0 +1,262 @@
+/* Company Detail Page Styles */
+
+.company-detail {
+  min-height: 100vh;
+  background-color: var(--color-bg-light);
+}
+
+/* Hero Section */
+.company-detail__hero {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #1e1b4b 100%);
+  padding: 3rem 1rem;
+  color: white;
+}
+
+.company-detail__hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.company-detail__logo {
+  width: 100px;
+  height: 100px;
+  background: var(--color-accent);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.company-detail__info h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.company-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.company-detail__industry {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+}
+
+.company-detail__location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.company-detail__location svg {
+  width: 18px;
+  height: 18px;
+}
+
+.company-detail__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.company-detail__stars {
+  display: flex;
+  gap: 0.125rem;
+}
+
+.company-detail__stars svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Container */
+.company-detail__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+/* Main Content */
+.company-detail__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.company-detail__section {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.company-detail__section h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.company-detail__section p {
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+/* Info Grid */
+.company-detail__info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.company-detail__info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.company-detail__info-item .label {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.company-detail__info-item .value {
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+/* Benefits */
+.company-detail__benefits {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.company-detail__benefit {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.company-detail__benefit svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* Sidebar */
+.company-detail__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.company-detail__sidebar-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.company-detail__sidebar-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.company-detail__positions-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+.company-detail__view-jobs-btn {
+  display: block;
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--color-accent);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: var(--radius-md);
+  transition: background 0.2s;
+}
+
+.company-detail__view-jobs-btn:hover {
+  background: #ea580c;
+}
+
+.company-detail__action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--color-bg-light);
+  color: var(--color-text-dark);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  margin-bottom: 0.75rem;
+  transition: all 0.2s;
+}
+
+.company-detail__action-btn:last-child {
+  margin-bottom: 0;
+}
+
+.company-detail__action-btn:hover {
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--color-accent);
+}
+
+.company-detail__action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .company-detail__container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .company-detail__hero-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .company-detail__meta {
+    justify-content: center;
+  }
+
+  .company-detail__rating {
+    justify-content: center;
+  }
+
+  .company-detail__info-grid,
+  .company-detail__benefits {
+    grid-template-columns: 1fr;
+  }
+}

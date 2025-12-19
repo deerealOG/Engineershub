@@ -263,12 +263,13 @@
 }
 
 .applicant-card__action.primary {
-  background: var(--color-accent);
+  background: var(--color-primary);
   color: white;
+  font-style: italic;
 }
 
 .applicant-card__action.primary:hover {
-  background: var(--color-accent-hover);
+  background: var(--color-primary-hover);
 }
 
 .applicant-card__action.secondary {
@@ -339,4 +340,156 @@
   .applicants-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Applicant Modals */
+.applicant-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.applicant-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.applicant-modal__header .applicant-modal__avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.applicant-modal__header h3 {
+  font-size: 1.125rem;
+  color: var(--color-text-dark);
+}
+
+.applicant-modal__header p {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.applicant-modal__details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.applicant-modal__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.applicant-modal__detail label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.applicant-modal__detail span {
+  font-size: 0.9375rem;
+  color: var(--color-text-dark);
+}
+
+.applicant-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.applicant-status.new {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.applicant-status.reviewed {
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--color-accent);
+}
+
+.applicant-status.interview {
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
+}
+
+.applicant-status.offer {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.applicant-status.rejected {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.applicant-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.applicant-modal__input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.applicant-modal__input-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-dark);
+}
+
+.applicant-modal__input-group input {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+}
+
+.applicant-modal__input-group input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.applicant-modal__btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.applicant-modal__btn.primary {
+  background: var(--color-accent);
+  color: white;
+  border: none;
+}
+
+.applicant-modal__btn.primary:hover {
+  background: var(--color-accent-hover);
+}
+
+.applicant-modal__btn.secondary {
+  background: var(--color-bg-light);
+  color: var(--color-text-dark);
+  border: 1px solid var(--color-border);
+}
+
+.applicant-modal__btn.secondary:hover {
+  background: var(--color-border);
 }

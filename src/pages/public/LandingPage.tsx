@@ -17,7 +17,7 @@ export function LandingPage() {
               Connect with top engineering firms and discover opportunities that match your skills and ambitions. Your next career move starts here.
             </p>
             <div className="landing-hero__actions">
-              <Link to="/jobseeker/signup" className="landing-hero__btn-primary">Get Started</Link>
+              <Link to="/role-selection" className="landing-hero__btn-primary">Get Started</Link>
               <Link to="/jobs" className="landing-hero__btn-secondary">Browse Jobs</Link>
             </div>
             

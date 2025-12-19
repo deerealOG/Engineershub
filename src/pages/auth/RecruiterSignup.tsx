@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../../components/layout';
 import { Logo, Input, Select, Button, Checkbox, SocialButtons } from '../../components/ui';
+import { useAuth } from '../../context/AuthContext';
 import hardhatSunset from '../../assets/images/hardhat-sunset.webp';
 import companyTrust from '../../assets/images/company-trust.webp';
 import './RecruiterSignup.css';
@@ -17,6 +18,8 @@ const countries = [
 ];
 
 export function RecruiterSignup() {
+  const { signup } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -25,10 +28,55 @@ export function RecruiterSignup() {
     emailTips: true,
     agreeTerms: false,
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+    if (!formData.country) {
+      newErrors.country = 'Please select a country';
+    }
+    if (!formData.agreeTerms) {
+      newErrors.agreeTerms = 'You must agree to the terms';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Recruiter signup:', formData);
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    // Get the full country name
+    const countryLabel = countries.find(c => c.value === formData.country)?.label || formData.country;
+
+    // Sign up the user using AuthContext
+    signup('company', {
+      fullName: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+      country: countryLabel,
+    });
+
+    // Navigate to company registration page
+    navigate('/company/register');
   };
 
   return (
@@ -68,6 +116,7 @@ export function RecruiterSignup() {
                   setFormData({ ...formData, fullName: e.target.value })
                 }
                 placeholder="John Doe"
+                error={errors.fullName}
               />
 
               <Input
@@ -77,6 +126,7 @@ export function RecruiterSignup() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
+                error={errors.email}
               />
 
               <Input
@@ -87,6 +137,7 @@ export function RecruiterSignup() {
                   setFormData({ ...formData, password: e.target.value })
                 }
                 helperText="At least 8 characters"
+                error={errors.password}
               />
 
               <Select
@@ -96,6 +147,7 @@ export function RecruiterSignup() {
                 onChange={(e) =>
                   setFormData({ ...formData, country: e.target.value })
                 }
+                error={errors.country}
               />
             </div>
 
@@ -112,9 +164,9 @@ export function RecruiterSignup() {
                 label={
                   <>
                     Yes, I understand and agree to the{' '}
-                    <a href="/terms">Engineers Hub Terms of Service</a>, including the{' '}
-                    <a href="/user-agreement">User Agreement</a> and{' '}
-                    <a href="/privacy">Privacy Policy</a>.
+                    <Link to="/terms">Engineers Hub Terms of Service</Link>, including the{' '}
+                    <Link to="/user-agreement">User Agreement</Link> and{' '}
+                    <Link to="/privacy">Privacy Policy</Link>.
                   </>
                 }
                 checked={formData.agreeTerms}
@@ -122,6 +174,9 @@ export function RecruiterSignup() {
                   setFormData({ ...formData, agreeTerms: e.target.checked })
                 }
               />
+              {errors.agreeTerms && (
+                <span className="recruiter-signup__error">{errors.agreeTerms}</span>
+              )}
             </div>
 
             <Button type="submit" fullWidth size="lg">

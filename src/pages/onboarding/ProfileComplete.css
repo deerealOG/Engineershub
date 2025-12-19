@@ -87,3 +87,42 @@
   font-size: 0.875rem;
   color: var(--color-text-dark);
 }
+
+.profile-complete__welcome {
+  margin-top: var(--spacing-sm);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+.profile-complete__skip {
+  text-align: center;
+  margin-top: var(--spacing-md);
+}
+
+.profile-complete__skip-link {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-decoration: underline;
+}
+
+.profile-complete__skip-link:hover {
+  color: var(--color-accent);
+}
+
+/* File group with name display */
+.profile-complete__file-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.profile-complete__file-name {
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: var(--spacing-xs);
+}
+

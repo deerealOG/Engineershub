@@ -21,7 +21,7 @@ import { JobApplication } from './pages/jobs/JobApplication';
 import { RateEmployer } from './pages/reviews/RateEmployer';
 
 // Public Pages
-import { LandingPage, About, Terms, Privacy, Contact, Help } from './pages/public';
+import { LandingPage, About, Terms, Privacy, Contact, Help, UserAgreement, CompanyDetail } from './pages/public';
 
 // Profile Pages
 import { Profile, ResumeManager } from './pages/profile';
@@ -44,6 +44,8 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/user-agreement" element={<UserAgreement />} />
+          <Route path="/company/:companyId" element={<CompanyDetail />} />
           
           {/* Auth Routes */}
           <Route path="/" element={<RoleSelection />} />
@@ -142,6 +144,21 @@ function App() {
           <Route path="/recruiter/company" element={
             <ProtectedRoute allowedRoles={['company']}>
               <CompanyProfile />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruiter/messages" element={
+            <ProtectedRoute allowedRoles={['company']}>
+              <Messages />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruiter/notifications" element={
+            <ProtectedRoute allowedRoles={['company']}>
+              <Notifications />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruiter/settings" element={
+            <ProtectedRoute allowedRoles={['company']}>
+              <Settings />
             </ProtectedRoute>
           } />
           

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '../../components/layout';
+import { useAuth } from '../../context/AuthContext';
 import './Settings.css';
 
 type SettingsTab = 'profile' | 'account' | 'notifications' | 'privacy';
@@ -26,7 +28,22 @@ const getIcon = (icon: string) => {
 };
 
 export function Settings() {
+  const { user, updateProfile } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  
+  // Profile form state
+  const [profileForm, setProfileForm] = useState({
+    firstName: '',
+    lastName: '',
+    title: '',
+    location: '',
+    bio: '',
+    phone: '',
+  });
+
+  // Notifications state
   const [notifications, setNotifications] = useState({
     email: true,
     push: true,
@@ -34,9 +51,44 @@ export function Settings() {
     marketing: false
   });
 
+  // Initialize form with user data
+  useEffect(() => {
+    if (user?.profile) {
+      const nameParts = (user.profile.fullName || '').split(' ');
+      setProfileForm({
+        firstName: nameParts[0] || '',
+        lastName: nameParts.slice(1).join(' ') || '',
+        title: user.profile.title || '',
+        location: user.profile.location || '',
+        bio: user.profile.about || '',
+        phone: user.profile.phone || '',
+      });
+    }
+  }, [user]);
+
   const toggleNotification = (key: keyof typeof notifications) => {
     setNotifications({ ...notifications, [key]: !notifications[key] });
   };
+
+  const handleProfileSave = () => {
+    setSaveStatus('saving');
+    
+    updateProfile({
+      fullName: `${profileForm.firstName} ${profileForm.lastName}`.trim(),
+      title: profileForm.title,
+      location: profileForm.location,
+      about: profileForm.bio,
+      phone: profileForm.phone,
+    });
+
+    setTimeout(() => {
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    }, 500);
+  };
+
+  // Get initials for avatar
+  const initials = (profileForm.firstName?.[0] || 'U') + (profileForm.lastName?.[0] || '');
 
   return (
     <DashboardLayout>
@@ -72,7 +124,7 @@ export function Settings() {
                   <p>Update your personal details and public profile.</p>
 
                   <div className="settings-avatar">
-                    <div className="settings-avatar__preview">AO</div>
+                    <div className="settings-avatar__preview">{initials}</div>
                     <div className="settings-avatar__actions">
                       <button className="settings-avatar__upload">Upload Photo</button>
                       <button className="settings-avatar__remove">Remove</button>
@@ -83,30 +135,82 @@ export function Settings() {
                     <div className="settings-form__row">
                       <div className="settings-form__group">
                         <label htmlFor="firstName">First Name</label>
-                        <input type="text" id="firstName" defaultValue="Adebayo" />
+                        <input 
+                          type="text" 
+                          id="firstName" 
+                          value={profileForm.firstName}
+                          onChange={(e) => setProfileForm({ ...profileForm, firstName: e.target.value })}
+                          placeholder="Enter your first name"
+                        />
                       </div>
                       <div className="settings-form__group">
                         <label htmlFor="lastName">Last Name</label>
-                        <input type="text" id="lastName" defaultValue="Okonkwo" />
+                        <input 
+                          type="text" 
+                          id="lastName" 
+                          value={profileForm.lastName}
+                          onChange={(e) => setProfileForm({ ...profileForm, lastName: e.target.value })}
+                          placeholder="Enter your last name"
+                        />
                       </div>
                     </div>
                     <div className="settings-form__group">
                       <label htmlFor="title">Job Title</label>
-                      <input type="text" id="title" defaultValue="Mechanical Engineer" />
+                      <input 
+                        type="text" 
+                        id="title" 
+                        value={profileForm.title}
+                        onChange={(e) => setProfileForm({ ...profileForm, title: e.target.value })}
+                        placeholder="e.g., Mechanical Engineer"
+                      />
+                    </div>
+                    <div className="settings-form__group">
+                      <label htmlFor="phone">Phone Number</label>
+                      <input 
+                        type="tel" 
+                        id="phone" 
+                        value={profileForm.phone}
+                        onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                        placeholder="+234 XXX XXX XXXX"
+                      />
                     </div>
                     <div className="settings-form__group">
                       <label htmlFor="location">Location</label>
-                      <input type="text" id="location" defaultValue="Lagos, Nigeria" />
+                      <input 
+                        type="text" 
+                        id="location" 
+                        value={profileForm.location}
+                        onChange={(e) => setProfileForm({ ...profileForm, location: e.target.value })}
+                        placeholder="e.g., Lagos, Nigeria"
+                      />
                     </div>
                     <div className="settings-form__group">
                       <label htmlFor="bio">Bio</label>
-                      <textarea id="bio" rows={4} defaultValue="Experienced mechanical engineer..." />
+                      <textarea 
+                        id="bio" 
+                        rows={4} 
+                        value={profileForm.bio}
+                        onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+                        placeholder="Tell us about yourself, your experience, and what you're looking for..."
+                      />
                     </div>
                   </div>
                 </section>
 
                 <div className="settings-save">
-                  <button className="settings-save__btn">Save Changes</button>
+                  <button 
+                    className="settings-save__btn" 
+                    onClick={handleProfileSave}
+                    disabled={saveStatus === 'saving'}
+                  >
+                    {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? '✓ Saved!' : 'Save Changes'}
+                  </button>
+                  <button 
+                    className="settings-save__cancel"
+                    onClick={() => navigate('/profile')}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </>
             )}
@@ -121,7 +225,7 @@ export function Settings() {
                   <div className="settings-form">
                     <div className="settings-form__group">
                       <label htmlFor="email">Email</label>
-                      <input type="email" id="email" defaultValue="adebayo.okonkwo@email.com" />
+                      <input type="email" id="email" defaultValue={user?.profile?.email || ''} placeholder="your@email.com" />
                     </div>
                   </div>
                 </section>
@@ -135,15 +239,15 @@ export function Settings() {
                     <div className="settings-form">
                       <div className="settings-form__group">
                         <label htmlFor="currentPassword">Current Password</label>
-                        <input type="password" id="currentPassword" />
+                        <input type="password" id="currentPassword" placeholder="Enter current password" />
                       </div>
                       <div className="settings-form__group">
                         <label htmlFor="newPassword">New Password</label>
-                        <input type="password" id="newPassword" />
+                        <input type="password" id="newPassword" placeholder="Enter new password" />
                       </div>
                       <div className="settings-form__group">
                         <label htmlFor="confirmPassword">Confirm New Password</label>
-                        <input type="password" id="confirmPassword" />
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password" />
                       </div>
                     </div>
                   </div>

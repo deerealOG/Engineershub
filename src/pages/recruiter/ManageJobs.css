@@ -377,3 +377,33 @@
     justify-content: flex-end;
   }
 }
+
+/* Modal Buttons */
+.manage-jobs__modal-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.manage-jobs__modal-btn.secondary {
+  background: var(--color-bg-light);
+  color: var(--color-text-dark);
+  border: 1px solid var(--color-border);
+}
+
+.manage-jobs__modal-btn.secondary:hover {
+  background: var(--color-border);
+}
+
+.manage-jobs__modal-btn.danger {
+  background: #ef4444;
+  color: white;
+  border: none;
+}
+
+.manage-jobs__modal-btn.danger:hover {
+  background: #dc2626;
+}

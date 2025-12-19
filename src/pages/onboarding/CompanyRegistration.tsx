@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input, Button, FileUpload, Stepper } from '../../components/ui';
 import constructionWorkers from '../../assets/images/construction-workers.webp';
 import './CompanyRegistration.css';
@@ -7,6 +7,7 @@ import './CompanyRegistration.css';
 const STEPS = ['Company Details', 'Verification Documents', 'Preview Registration'];
 
 export function CompanyRegistration() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: '',
@@ -35,6 +36,13 @@ export function CompanyRegistration() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Company registration:', formData);
+    // Navigate to recruiter dashboard
+    navigate('/recruiter/dashboard');
+  };
+
+  const handleSkip = () => {
+    // Allow recruiter to skip and proceed to dashboard
+    navigate('/recruiter/dashboard');
   };
 
   return (
@@ -306,6 +314,13 @@ export function CompanyRegistration() {
                 Submit Registration
               </Button>
             )}
+            <button 
+              type="button" 
+              className="company-registration__skip"
+              onClick={handleSkip}
+            >
+              Skip for now →
+            </button>
           </div>
 
           <p className="company-registration__login">

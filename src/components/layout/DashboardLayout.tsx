@@ -38,9 +38,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </>
               ) : (
                 <>
-                  <NavLink to="/jobs" end>Home</NavLink>
-                  <NavLink to="/reviews">Company reviews</NavLink>
-                  <NavLink to="/rate-employer">Rate Employer</NavLink>
+                  <NavLink to="/jobs" end>Find Jobs</NavLink>
+                  <NavLink to="/reviews">Companies</NavLink>
+                  <NavLink to="/applications">Applications</NavLink>
                 </>
               )}
             </nav>
@@ -56,13 +56,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <span className="icon-label">Saved</span>
               </NavLink>
             )}
-            <NavLink to="/messages" className="dashboard-header__icon" aria-label="Messages">
+            <NavLink to={isRecruiter ? "/recruiter/messages" : "/messages"} className="dashboard-header__icon" aria-label="Messages">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
               <span className="icon-label">Messages</span>
             </NavLink>
-            <NavLink to="/notifications" className="dashboard-header__icon" aria-label="Notifications">
+            <NavLink to={isRecruiter ? "/recruiter/notifications" : "/notifications"} className="dashboard-header__icon" aria-label="Notifications">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
                 <path d="M13.73 21a2 2 0 0 1-3.46 0" />
@@ -125,9 +125,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </>
           ) : (
             <>
-              <NavLink to="/jobs" end onClick={() => setIsMobileMenuOpen(false)}>Home</NavLink>
-              <NavLink to="/reviews" onClick={() => setIsMobileMenuOpen(false)}>Company reviews</NavLink>
-              <NavLink to="/rate-employer" onClick={() => setIsMobileMenuOpen(false)}>Rate Employer</NavLink>
+              <NavLink to="/jobs" end onClick={() => setIsMobileMenuOpen(false)}>Find Jobs</NavLink>
+              <NavLink to="/reviews" onClick={() => setIsMobileMenuOpen(false)}>Companies</NavLink>
+              <NavLink to="/applications" onClick={() => setIsMobileMenuOpen(false)}>Applications</NavLink>
             </>
           )}
         </nav>
@@ -141,13 +141,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="mobile-icon-label">Saved</span>
             </NavLink>
           )}
-          <NavLink to="/messages" className="dashboard-header__icon" onClick={() => setIsMobileMenuOpen(false)}>
+          <NavLink to={isRecruiter ? "/recruiter/messages" : "/messages"} className="dashboard-header__icon" onClick={() => setIsMobileMenuOpen(false)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
             <span className="mobile-icon-label">Messages</span>
           </NavLink>
-          <NavLink to="/notifications" className="dashboard-header__icon" onClick={() => setIsMobileMenuOpen(false)}>
+          <NavLink to={isRecruiter ? "/recruiter/notifications" : "/notifications"} className="dashboard-header__icon" onClick={() => setIsMobileMenuOpen(false)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
@@ -204,21 +204,51 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="dashboard-footer__container">
           <div className="dashboard-footer__brand">
             <Logo size="sm" />
+            <p className="dashboard-footer__tagline">Connecting engineers with opportunities across Africa</p>
+            {/* Social Icons */}
+            <div className="dashboard-footer__social">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z M2 9h4v12H2z M4 6a2 2 0 100-4 2 2 0 000 4z" />
+                </svg>
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                </svg>
+              </a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+                </svg>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </a>
+            </div>
           </div>
           <div className="dashboard-footer__links">
             <div className="dashboard-footer__column">
-              <Link to="/jobs">Home</Link>
-              <Link to="/reviews">Company reviews</Link>
+              <h4>Explore</h4>
+              <Link to="/jobs">Find Jobs</Link>
+              <Link to="/reviews">Companies</Link>
+              <Link to="/rate-employer">Rate Employer</Link>
             </div>
             <div className="dashboard-footer__column">
-              <Link to="/applications">Save</Link>
-              <Link to="/messages">Message</Link>
-              <Link to="/notifications">Notification</Link>
-              <Link to="/profile/complete">Profile</Link>
+              <h4>Account</h4>
+              <Link to="/applications">My Applications</Link>
+              <Link to="/messages">Messages</Link>
+              <Link to="/profile">Profile</Link>
             </div>
             <div className="dashboard-footer__column">
-              <Link to="/about">About</Link>
-              <Link to="/terms">Terms of use</Link>
+              <h4>Legal</h4>
+              <Link to="/about">About Us</Link>
+              <Link to="/terms">Terms of Use</Link>
+              <Link to="/privacy">Privacy Policy</Link>
             </div>
           </div>
           <div className="dashboard-footer__newsletter">
@@ -231,10 +261,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <button>Subscribe</button>
           </div>
         </div>
-        <div className="dashboard-footer__decoration">
-          <svg viewBox="0 0 24 24" fill="#f97316">
-            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22l-1.92 3.32c-.12.22-.07.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
-          </svg>
+        <div className="dashboard-footer__bottom">
+          <p>© 2024 EngineersHub. All rights reserved.</p>
         </div>
       </footer>
     </div>

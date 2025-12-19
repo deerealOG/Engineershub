@@ -238,9 +238,9 @@ export function JobListing() {
         {/* Filter Modal */}
         <FilterModal isOpen={isFilterModalOpen} onClose={() => setIsFilterModalOpen(false)} />
 
-        <div className="job-listing__content" style={{ display: 'block' }}>
+        <div className="job-listing__content">
             {/* Job List */}
-            <div className="job-listing__list" style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+            <div className="job-listing__list">
                 {JOBS.map((job) => (
                     <div 
                         key={job.id} 
@@ -291,14 +291,16 @@ export function JobListing() {
                         </div>
                     </div>
                 ))}
-                 <div className="job-listing__pagination">
-                     <button className="page-btn active">1</button>
-                     <button className="page-btn">2</button>
-                     <button className="page-btn">3</button>
-                     <button className="page-btn">4</button>
-                     <button className="page-btn">...</button>
-                     <button className="page-btn">{'>'}</button>
-                 </div>
+            </div>
+            
+            {/* Pagination at bottom */}
+            <div className="job-listing__pagination">
+                <button className="page-btn active">1</button>
+                <button className="page-btn">2</button>
+                <button className="page-btn">3</button>
+                <button className="page-btn">4</button>
+                <button className="page-btn">...</button>
+                <button className="page-btn">{'>'}</button>
             </div>
         </div>
       </div>

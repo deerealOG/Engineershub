@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '../../components/layout';
+import { Modal } from '../../components/ui';
 import './ManageJobs.css';
 
 type JobStatus = 'all' | 'active' | 'closed' | 'draft';
@@ -16,7 +17,7 @@ interface Job {
   postedDate: string;
 }
 
-const JOBS: Job[] = [
+const INITIAL_JOBS: Job[] = [
   { id: 1, title: 'Mechanical Engineer', location: 'Lagos, Nigeria', type: 'Full-time', applicants: 45, views: 312, status: 'active', postedDate: 'Dec 10, 2025' },
   { id: 2, title: 'Senior Safety Engineer', location: 'Port Harcourt', type: 'Full-time', applicants: 32, views: 245, status: 'active', postedDate: 'Dec 8, 2025' },
   { id: 3, title: 'Process Engineer', location: 'Lagos, Nigeria', type: 'Contract', applicants: 28, views: 189, status: 'active', postedDate: 'Dec 5, 2025' },
@@ -26,10 +27,14 @@ const JOBS: Job[] = [
 ];
 
 export function ManageJobs() {
+  const navigate = useNavigate();
+  const [jobs, setJobs] = useState(INITIAL_JOBS);
   const [activeTab, setActiveTab] = useState<JobStatus>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
 
-  const filteredJobs = JOBS.filter(job => {
+  const filteredJobs = jobs.filter(job => {
     const matchesTab = activeTab === 'all' || job.status === activeTab;
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           job.location.toLowerCase().includes(searchTerm.toLowerCase());
@@ -37,10 +42,41 @@ export function ManageJobs() {
   });
 
   const counts = {
-    all: JOBS.length,
-    active: JOBS.filter(j => j.status === 'active').length,
-    closed: JOBS.filter(j => j.status === 'closed').length,
-    draft: JOBS.filter(j => j.status === 'draft').length
+    all: jobs.length,
+    active: jobs.filter(j => j.status === 'active').length,
+    closed: jobs.filter(j => j.status === 'closed').length,
+    draft: jobs.filter(j => j.status === 'draft').length
+  };
+
+  const handleEdit = (job: Job) => {
+    // Navigate to edit page (reusing PostJob with job data)
+    navigate(`/recruiter/jobs/new?edit=${job.id}`);
+  };
+
+  const handleDuplicate = (job: Job) => {
+    const newJob: Job = {
+      ...job,
+      id: Date.now(),
+      title: `${job.title} (Copy)`,
+      applicants: 0,
+      views: 0,
+      status: 'draft',
+      postedDate: '-'
+    };
+    setJobs(prev => [...prev, newJob]);
+  };
+
+  const openDeleteModal = (job: Job) => {
+    setJobToDelete(job);
+    setShowDeleteModal(true);
+  };
+
+  const handleDelete = () => {
+    if (jobToDelete) {
+      setJobs(prev => prev.filter(j => j.id !== jobToDelete.id));
+      setShowDeleteModal(false);
+      setJobToDelete(null);
+    }
   };
 
   return (
@@ -135,19 +171,19 @@ export function ManageJobs() {
                       <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
                     </svg>
                   </Link>
-                  <button className="manage-jobs__action-btn" title="Edit">
+                  <button className="manage-jobs__action-btn" title="Edit" onClick={() => handleEdit(job)}>
                     <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                       <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                       <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                     </svg>
                   </button>
-                  <button className="manage-jobs__action-btn" title="Duplicate">
+                  <button className="manage-jobs__action-btn" title="Duplicate" onClick={() => handleDuplicate(job)}>
                     <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                       <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                       <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
                     </svg>
                   </button>
-                  <button className="manage-jobs__action-btn delete" title="Delete">
+                  <button className="manage-jobs__action-btn delete" title="Delete" onClick={() => openDeleteModal(job)}>
                     <svg viewBox="0 0 24 24" fill="none" strokeWidth="2">
                       <polyline points="3 6 5 6 21 6" />
                       <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
@@ -193,6 +229,27 @@ export function ManageJobs() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Delete Job Listing"
+        footer={
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button className="manage-jobs__modal-btn secondary" onClick={() => setShowDeleteModal(false)}>
+              Cancel
+            </button>
+            <button className="manage-jobs__modal-btn danger" onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+        }
+      >
+        <p style={{ color: 'var(--color-text-muted)' }}>
+          Are you sure you want to delete <strong>{jobToDelete?.title}</strong>? This action cannot be undone.
+        </p>
+      </Modal>
     </DashboardLayout>
   );
 }

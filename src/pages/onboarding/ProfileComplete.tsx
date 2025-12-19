@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '../../components/layout';
 import { Input, Button, FileUpload, Checkbox } from '../../components/ui';
+import { useAuth } from '../../context/AuthContext';
 import constructionWorkers from '../../assets/images/construction-workers.webp';
 import './ProfileComplete.css';
 
 export function ProfileComplete() {
+  const { user, updateProfile } = useAuth();
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     engineeringField: '',
     yearsOfExperience: '',
@@ -17,9 +21,38 @@ export function ProfileComplete() {
     emailTips: true,
   });
 
+  // Track uploaded file names for display
+  const [uploadedFiles, setUploadedFiles] = useState({
+    cv: '',
+    profileImage: '',
+    portfolio: '',
+  });
+
+  const handleFileChange = (field: 'cv' | 'profileImage' | 'portfolio') => (file: File | null) => {
+    setFormData({ ...formData, [field]: file });
+    setUploadedFiles({ ...uploadedFiles, [field]: file?.name || '' });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Profile complete:', formData);
+    
+    // Update the user's profile with the completed data
+    updateProfile({
+      engineeringField: formData.engineeringField,
+      yearsOfExperience: formData.yearsOfExperience,
+      location: formData.location,
+      title: formData.engineeringField || 'Engineer',
+    });
+
+    console.log('Profile completed with files:', {
+      cv: formData.cv?.name,
+      profileImage: formData.profileImage?.name,
+      portfolio: formData.portfolio?.name,
+      portfolioLink: formData.portfolioLink,
+    });
+
+    // Navigate to the profile page
+    navigate('/profile');
   };
 
   return (
@@ -38,6 +71,11 @@ export function ProfileComplete() {
         <div className="profile-complete__content">
             <div className="profile-complete__header">
             <h1>Create Your Profile</h1>
+            {user && (
+              <p className="profile-complete__welcome">
+                Welcome, {user.profile.fullName}! Let's complete your profile.
+              </p>
+            )}
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -49,6 +87,7 @@ export function ProfileComplete() {
                     onChange={(e) =>
                     setFormData({ ...formData, engineeringField: e.target.value })
                     }
+                    placeholder="e.g., Mechanical Engineering, Civil Engineering"
                 />
                 <span className="profile-complete__edit">Edit</span>
                 </div>
@@ -60,30 +99,52 @@ export function ProfileComplete() {
                     onChange={(e) =>
                     setFormData({ ...formData, yearsOfExperience: e.target.value })
                     }
+                    placeholder="e.g., 5"
                 />
                 <span className="profile-complete__edit">Edit</span>
                 </div>
 
-                <FileUpload
-                label="Upload CV"
-                accept=".pdf,.docx"
-                maxSize="10MB"
-                onChange={(file) => setFormData({ ...formData, cv: file })}
-                />
+                <div className="profile-complete__file-group">
+                  <FileUpload
+                    label="Upload CV"
+                    accept=".pdf,.docx"
+                    maxSize="10MB"
+                    onChange={handleFileChange('cv')}
+                  />
+                  {uploadedFiles.cv && (
+                    <p className="profile-complete__file-name">
+                      ✓ Uploaded: {uploadedFiles.cv}
+                    </p>
+                  )}
+                </div>
 
-                <FileUpload
-                label="Upload Image"
-                accept=".jpg,.jpeg,.png"
-                maxSize="10MB"
-                onChange={(file) => setFormData({ ...formData, profileImage: file })}
-                />
+                <div className="profile-complete__file-group">
+                  <FileUpload
+                    label="Upload Image"
+                    accept=".jpg,.jpeg,.png"
+                    maxSize="10MB"
+                    onChange={handleFileChange('profileImage')}
+                  />
+                  {uploadedFiles.profileImage && (
+                    <p className="profile-complete__file-name">
+                      ✓ Uploaded: {uploadedFiles.profileImage}
+                    </p>
+                  )}
+                </div>
 
-                <FileUpload
-                label="Upload Portfolio (Optional: link to online portfolio)"
-                accept=".pdf,.jpg,.jpeg,.png"
-                maxSize="10MB"
-                onChange={(file) => setFormData({ ...formData, portfolio: file })}
-                />
+                <div className="profile-complete__file-group">
+                  <FileUpload
+                    label="Upload Portfolio (Optional)"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    maxSize="10MB"
+                    onChange={handleFileChange('portfolio')}
+                  />
+                  {uploadedFiles.portfolio && (
+                    <p className="profile-complete__file-name">
+                      ✓ Uploaded: {uploadedFiles.portfolio}
+                    </p>
+                  )}
+                </div>
 
                 <Input
                 label="Portfolio link:"
@@ -91,6 +152,7 @@ export function ProfileComplete() {
                 onChange={(e) =>
                     setFormData({ ...formData, portfolioLink: e.target.value })
                 }
+                placeholder="https://yourportfolio.com"
                 />
 
                 <div className="profile-complete__field-row">
@@ -100,6 +162,7 @@ export function ProfileComplete() {
                     onChange={(e) =>
                     setFormData({ ...formData, location: e.target.value })
                     }
+                    placeholder="e.g., Lagos, Nigeria"
                 />
                 <span className="profile-complete__edit">Edit</span>
                 </div>
@@ -117,8 +180,10 @@ export function ProfileComplete() {
                 Submit Profile
             </Button>
 
-            <p className="profile-complete__login">
-                Already Registered? <Link to="/jobseeker/login">Login</Link>
+            <p className="profile-complete__skip">
+              <button type="button" onClick={() => navigate('/profile')} className="profile-complete__skip-link">
+                Skip for now
+              </button>
             </p>
             </form>
         </div>

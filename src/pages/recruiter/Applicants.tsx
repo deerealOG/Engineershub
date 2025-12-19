@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '../../components/layout';
+import { Modal } from '../../components/ui';
 import './Applicants.css';
 
 type PipelineStage = 'all' | 'new' | 'reviewed' | 'interview' | 'offer' | 'rejected';
@@ -14,16 +16,18 @@ interface Applicant {
   appliedDate: string;
   rating: number;
   stage: Exclude<PipelineStage, 'all'>;
+  email: string;
+  phone: string;
 }
 
-const APPLICANTS: Applicant[] = [
-  { id: 1, name: 'Adebayo Okonkwo', title: 'Mechanical Engineer', job: 'Mechanical Engineer', experience: '5 years', location: 'Lagos', appliedDate: '2 hours ago', rating: 5, stage: 'new' },
-  { id: 2, name: 'Chidinma Nwosu', title: 'Safety Specialist', job: 'Senior Safety Engineer', experience: '7 years', location: 'Port Harcourt', appliedDate: '5 hours ago', rating: 4, stage: 'new' },
-  { id: 3, name: 'Emmanuel Ibrahim', title: 'Process Engineer', job: 'Process Engineer', experience: '4 years', location: 'Lagos', appliedDate: 'Yesterday', rating: 4, stage: 'reviewed' },
-  { id: 4, name: 'Folake Adeyemi', title: 'Maintenance Engineer', job: 'Mechanical Engineer', experience: '3 years', location: 'Lagos', appliedDate: 'Yesterday', rating: 3, stage: 'reviewed' },
-  { id: 5, name: 'Gbenga Ojo', title: 'Senior Engineer', job: 'Mechanical Engineer', experience: '8 years', location: 'Abuja', appliedDate: '2 days ago', rating: 5, stage: 'interview' },
-  { id: 6, name: 'Halima Musa', title: 'HSE Specialist', job: 'Senior Safety Engineer', experience: '6 years', location: 'Lagos', appliedDate: '3 days ago', rating: 4, stage: 'offer' },
-  { id: 7, name: 'Ikenna Chukwu', title: 'Junior Engineer', job: 'Mechanical Engineer', experience: '1 year', location: 'Lagos', appliedDate: '4 days ago', rating: 2, stage: 'rejected' },
+const INITIAL_APPLICANTS: Applicant[] = [
+  { id: 1, name: 'Adebayo Okonkwo', title: 'Mechanical Engineer', job: 'Mechanical Engineer', experience: '5 years', location: 'Lagos', appliedDate: '2 hours ago', rating: 5, stage: 'new', email: 'adebayo@email.com', phone: '+234 801 234 5678' },
+  { id: 2, name: 'Chidinma Nwosu', title: 'Safety Specialist', job: 'Senior Safety Engineer', experience: '7 years', location: 'Port Harcourt', appliedDate: '5 hours ago', rating: 4, stage: 'new', email: 'chidinma@email.com', phone: '+234 802 345 6789' },
+  { id: 3, name: 'Emmanuel Ibrahim', title: 'Process Engineer', job: 'Process Engineer', experience: '4 years', location: 'Lagos', appliedDate: 'Yesterday', rating: 4, stage: 'reviewed', email: 'emmanuel@email.com', phone: '+234 803 456 7890' },
+  { id: 4, name: 'Folake Adeyemi', title: 'Maintenance Engineer', job: 'Mechanical Engineer', experience: '3 years', location: 'Lagos', appliedDate: 'Yesterday', rating: 3, stage: 'reviewed', email: 'folake@email.com', phone: '+234 804 567 8901' },
+  { id: 5, name: 'Gbenga Ojo', title: 'Senior Engineer', job: 'Mechanical Engineer', experience: '8 years', location: 'Abuja', appliedDate: '2 days ago', rating: 5, stage: 'interview', email: 'gbenga@email.com', phone: '+234 805 678 9012' },
+  { id: 6, name: 'Halima Musa', title: 'HSE Specialist', job: 'Senior Safety Engineer', experience: '6 years', location: 'Lagos', appliedDate: '3 days ago', rating: 4, stage: 'offer', email: 'halima@email.com', phone: '+234 806 789 0123' },
+  { id: 7, name: 'Ikenna Chukwu', title: 'Junior Engineer', job: 'Mechanical Engineer', experience: '1 year', location: 'Lagos', appliedDate: '4 days ago', rating: 2, stage: 'rejected', email: 'ikenna@email.com', phone: '+234 807 890 1234' },
 ];
 
 const PIPELINE_STAGES: { key: PipelineStage; label: string }[] = [
@@ -36,10 +40,19 @@ const PIPELINE_STAGES: { key: PipelineStage; label: string }[] = [
 ];
 
 export function Applicants() {
+  const navigate = useNavigate();
+  const [applicants, setApplicants] = useState(INITIAL_APPLICANTS);
   const [activeStage, setActiveStage] = useState<PipelineStage>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [interviewDate, setInterviewDate] = useState('');
+  const [interviewTime, setInterviewTime] = useState('');
+  const [offerSalary, setOfferSalary] = useState('');
 
-  const filteredApplicants = APPLICANTS.filter(applicant => {
+  const filteredApplicants = applicants.filter(applicant => {
     const matchesStage = activeStage === 'all' || applicant.stage === activeStage;
     const matchesSearch = applicant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           applicant.job.toLowerCase().includes(searchTerm.toLowerCase());
@@ -48,17 +61,69 @@ export function Applicants() {
 
   const getCounts = () => {
     const counts: Record<PipelineStage, number> = {
-      all: APPLICANTS.length,
-      new: APPLICANTS.filter(a => a.stage === 'new').length,
-      reviewed: APPLICANTS.filter(a => a.stage === 'reviewed').length,
-      interview: APPLICANTS.filter(a => a.stage === 'interview').length,
-      offer: APPLICANTS.filter(a => a.stage === 'offer').length,
-      rejected: APPLICANTS.filter(a => a.stage === 'rejected').length
+      all: applicants.length,
+      new: applicants.filter(a => a.stage === 'new').length,
+      reviewed: applicants.filter(a => a.stage === 'reviewed').length,
+      interview: applicants.filter(a => a.stage === 'interview').length,
+      offer: applicants.filter(a => a.stage === 'offer').length,
+      rejected: applicants.filter(a => a.stage === 'rejected').length
     };
     return counts;
   };
 
   const counts = getCounts();
+
+  const handleShortlist = (applicant: Applicant) => {
+    setApplicants(prev => prev.map(a => 
+      a.id === applicant.id ? { ...a, stage: 'reviewed' as const } : a
+    ));
+  };
+
+  const handleReject = (applicant: Applicant) => {
+    setApplicants(prev => prev.map(a => 
+      a.id === applicant.id ? { ...a, stage: 'rejected' as const } : a
+    ));
+  };
+
+  const handleScheduleInterview = () => {
+    if (selectedApplicant && interviewDate && interviewTime) {
+      setApplicants(prev => prev.map(a => 
+        a.id === selectedApplicant.id ? { ...a, stage: 'interview' as const } : a
+      ));
+      setShowScheduleModal(false);
+      setInterviewDate('');
+      setInterviewTime('');
+    }
+  };
+
+  const handleSendOffer = () => {
+    if (selectedApplicant && offerSalary) {
+      setApplicants(prev => prev.map(a => 
+        a.id === selectedApplicant.id ? { ...a, stage: 'offer' as const } : a
+      ));
+      setShowOfferModal(false);
+      setOfferSalary('');
+    }
+  };
+
+  const openViewModal = (applicant: Applicant) => {
+    setSelectedApplicant(applicant);
+    setShowViewModal(true);
+  };
+
+  const openScheduleModal = (applicant: Applicant) => {
+    setSelectedApplicant(applicant);
+    setShowScheduleModal(true);
+  };
+
+  const openOfferModal = (applicant: Applicant) => {
+    setSelectedApplicant(applicant);
+    setShowOfferModal(true);
+  };
+
+  const handleMessage = (_applicant: Applicant) => {
+    navigate('/recruiter/messages');
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -168,7 +233,7 @@ export function Applicants() {
                 </div>
 
                 <div className="applicant-card__actions">
-                  <button className="applicant-card__action secondary">
+                  <button className="applicant-card__action secondary" onClick={() => openViewModal(applicant)}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                       <circle cx="12" cy="12" r="3" />
@@ -177,13 +242,13 @@ export function Applicants() {
                   </button>
                   {applicant.stage === 'new' && (
                     <>
-                      <button className="applicant-card__action accept">
+                      <button className="applicant-card__action accept" onClick={() => handleShortlist(applicant)}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M20 6L9 17l-5-5" />
                         </svg>
                         Shortlist
                       </button>
-                      <button className="applicant-card__action reject">
+                      <button className="applicant-card__action reject" onClick={() => handleReject(applicant)}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M18 6L6 18M6 6l12 12" />
                         </svg>
@@ -191,12 +256,12 @@ export function Applicants() {
                     </>
                   )}
                   {applicant.stage === 'reviewed' && (
-                    <button className="applicant-card__action primary">
+                    <button className="applicant-card__action primary" onClick={() => openScheduleModal(applicant)}>
                       Schedule Interview
                     </button>
                   )}
                   {applicant.stage === 'interview' && (
-                    <button className="applicant-card__action primary">
+                    <button className="applicant-card__action primary" onClick={() => openOfferModal(applicant)}>
                       Send Offer
                     </button>
                   )}
@@ -216,6 +281,136 @@ export function Applicants() {
           </div>
         )}
       </div>
+
+      {/* View Applicant Modal */}
+      <Modal
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        title="Applicant Profile"
+        footer={
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button className="applicant-modal__btn secondary" onClick={() => handleMessage(selectedApplicant!)}>
+              Message
+            </button>
+            <button className="applicant-modal__btn primary" onClick={() => setShowViewModal(false)}>
+              Close
+            </button>
+          </div>
+        }
+      >
+        {selectedApplicant && (
+          <div className="applicant-modal__content">
+            <div className="applicant-modal__header">
+              <div className="applicant-modal__avatar">
+                {selectedApplicant.name.split(' ').map(n => n[0]).join('')}
+              </div>
+              <div>
+                <h3>{selectedApplicant.name}</h3>
+                <p>{selectedApplicant.title}</p>
+              </div>
+            </div>
+            <div className="applicant-modal__details">
+              <div className="applicant-modal__detail">
+                <label>Email</label>
+                <span>{selectedApplicant.email}</span>
+              </div>
+              <div className="applicant-modal__detail">
+                <label>Phone</label>
+                <span>{selectedApplicant.phone}</span>
+              </div>
+              <div className="applicant-modal__detail">
+                <label>Experience</label>
+                <span>{selectedApplicant.experience}</span>
+              </div>
+              <div className="applicant-modal__detail">
+                <label>Location</label>
+                <span>{selectedApplicant.location}</span>
+              </div>
+              <div className="applicant-modal__detail">
+                <label>Applied For</label>
+                <span>{selectedApplicant.job}</span>
+              </div>
+              <div className="applicant-modal__detail">
+                <label>Status</label>
+                <span className={`applicant-status ${selectedApplicant.stage}`}>
+                  {selectedApplicant.stage.charAt(0).toUpperCase() + selectedApplicant.stage.slice(1)}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Schedule Interview Modal */}
+      <Modal
+        isOpen={showScheduleModal}
+        onClose={() => setShowScheduleModal(false)}
+        title="Schedule Interview"
+        footer={
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button className="applicant-modal__btn secondary" onClick={() => setShowScheduleModal(false)}>
+              Cancel
+            </button>
+            <button className="applicant-modal__btn primary" onClick={handleScheduleInterview}>
+              Schedule
+            </button>
+          </div>
+        }
+      >
+        <div className="applicant-modal__form">
+          <p style={{ marginBottom: '1rem', color: 'var(--color-text-muted)' }}>
+            Schedule interview with <strong>{selectedApplicant?.name}</strong>
+          </p>
+          <div className="applicant-modal__input-group">
+            <label>Date</label>
+            <input 
+              type="date" 
+              value={interviewDate} 
+              onChange={(e) => setInterviewDate(e.target.value)}
+            />
+          </div>
+          <div className="applicant-modal__input-group">
+            <label>Time</label>
+            <input 
+              type="time" 
+              value={interviewTime} 
+              onChange={(e) => setInterviewTime(e.target.value)}
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Send Offer Modal */}
+      <Modal
+        isOpen={showOfferModal}
+        onClose={() => setShowOfferModal(false)}
+        title="Send Job Offer"
+        footer={
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button className="applicant-modal__btn secondary" onClick={() => setShowOfferModal(false)}>
+              Cancel
+            </button>
+            <button className="applicant-modal__btn primary" onClick={handleSendOffer}>
+              Send Offer
+            </button>
+          </div>
+        }
+      >
+        <div className="applicant-modal__form">
+          <p style={{ marginBottom: '1rem', color: 'var(--color-text-muted)' }}>
+            Send offer to <strong>{selectedApplicant?.name}</strong> for <strong>{selectedApplicant?.job}</strong>
+          </p>
+          <div className="applicant-modal__input-group">
+            <label>Salary Offer (₦ per month)</label>
+            <input 
+              type="text" 
+              placeholder="e.g. 500,000"
+              value={offerSalary} 
+              onChange={(e) => setOfferSalary(e.target.value)}
+            />
+          </div>
+        </div>
+      </Modal>
     </DashboardLayout>
   );
 }

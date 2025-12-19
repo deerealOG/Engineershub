@@ -19,8 +19,9 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(30, 27, 75, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  border-left: 3px solid var(--color-accent);
 }
 
 .input-label {
@@ -40,7 +41,7 @@
 .input:not(:placeholder-shown) + .input-label {
   top: 0;
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: var(--color-accent);
 }
 
 .input-toggle-password {

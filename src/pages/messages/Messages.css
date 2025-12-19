@@ -221,7 +221,140 @@
 .messages__empty-selection {
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     color: var(--color-text-muted);
+    gap: var(--spacing-md);
+}
+
+.messages__empty-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--color-bg-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.messages__empty-icon svg {
+    width: 40px;
+    height: 40px;
+    stroke: var(--color-accent);
+}
+
+.messages__empty-selection h3 {
+    font-size: 1.125rem;
+    color: var(--color-text-dark);
+}
+
+.messages__empty-selection p {
+    font-size: 0.875rem;
+}
+
+/* Search with icon */
+.messages__search {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: var(--color-bg-light);
+}
+
+.messages__search svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--color-text-muted);
+    flex-shrink: 0;
+}
+
+.messages__search input {
+    flex: 1;
+    padding: var(--spacing-sm);
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+/* Unread badge */
+.message-item {
+    position: relative;
+}
+
+.message-item.unread .message-item__top h3 {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.message-item__badge {
+    width: 10px;
+    height: 10px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    position: absolute;
+    right: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Chat time */
+.chat__time {
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.4);
+    margin-top: 4px;
+}
+
+.chat__bubble.sent .chat__time {
+    text-align: right;
+}
+
+/* Better button styling */
+.chat__emoji svg,
+.chat__send svg {
+    width: 20px;
+    height: 20px;
+}
+
+.chat__send {
+    color: var(--color-accent);
+}
+
+.chat__send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.chat__options {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+}
+
+.chat__options svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--color-text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .messages__sidebar {
+        width: 100%;
+    }
+
+    .messages__content {
+        display: none;
+    }
+
+    .messages__container.chat-open .messages__sidebar {
+        display: none;
+    }
+
+    .messages__container.chat-open .messages__content {
+        display: flex;
+    }
 }

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '../../components/layout';
+import { Modal } from '../../components/ui';
 import shellLogo from '../../assets/images/shell-logo.webp';
 import './CompanyProfile.css';
 
@@ -46,6 +48,16 @@ const getIcon = (icon: string): React.ReactNode => {
 };
 
 export function CompanyProfile() {
+  const navigate = useNavigate();
+  const [showAboutModal, setShowAboutModal] = useState(false);
+  const [aboutText, setAboutText] = useState(COMPANY_DATA.about);
+
+  const handleSaveAbout = () => {
+    // In a real app, this would call an API
+    COMPANY_DATA.about = aboutText;
+    setShowAboutModal(false);
+  };
+
   return (
     <DashboardLayout>
       <div className="company-profile">
@@ -86,7 +98,7 @@ export function CompanyProfile() {
               </div>
             </div>
           </div>
-          <button className="company-profile__edit">
+          <button className="company-profile__edit" onClick={() => navigate('/recruiter/settings')}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
               <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
               <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -109,7 +121,7 @@ export function CompanyProfile() {
                   </svg>
                   About
                 </h2>
-                <button className="company-profile__edit-btn">
+                <button className="company-profile__edit-btn" onClick={() => setShowAboutModal(true)}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -139,6 +151,31 @@ export function CompanyProfile() {
                 </div>
               </div>
             </section>
+
+            <Modal
+              isOpen={showAboutModal}
+              onClose={() => setShowAboutModal(false)}
+              title="Edit About Us"
+              footer={
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <button className="profile-modal__btn-secondary" onClick={() => setShowAboutModal(false)}>Cancel</button>
+                  <button className="profile-modal__btn-primary" onClick={handleSaveAbout}>Save Changes</button>
+                </div>
+              }
+            >
+              <div className="profile-modal__form">
+                <div className="profile-modal__group">
+                  <label>About Company</label>
+                  <textarea 
+                    value={aboutText} 
+                    onChange={(e) => setAboutText(e.target.value)}
+                    rows={8}
+                    className="profile-modal__textarea"
+                  />
+                  <p className="profile-modal__hint">Describe your company's mission, history, and work environment.</p>
+                </div>
+              </div>
+            </Modal>
 
             {/* Culture */}
             <section className="company-profile__section">
