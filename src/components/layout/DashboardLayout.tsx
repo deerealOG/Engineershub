@@ -12,11 +12,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = () => {
     logout();
+    setIsLogoutModalOpen(false);
     navigate('/');
   };
 
@@ -79,7 +85,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <button 
                 className="dashboard-header__icon dashboard-header__profile" 
                 aria-label="Logout"
-                onClick={handleLogout}
+                onClick={handleLogoutClick}
                 title="Logout"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -163,7 +169,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </NavLink>
         </div>
 
-        <button className="mobile-logout-btn" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>
+        <button className="mobile-logout-btn" onClick={() => { setIsMobileMenuOpen(false); handleLogoutClick(); }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
             <polyline points="16 17 21 12 16 7" />
@@ -259,12 +265,27 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             </div>
             <button>Subscribe</button>
-          </div>
+
+    </div>
         </div>
         <div className="dashboard-footer__bottom">
           <p>© 2024 EngineersHub. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <div className="logout-modal-overlay">
+          <div className="logout-modal">
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to log out?</p>
+            <div className="logout-modal-actions">
+              <button className="btn-cancel" onClick={() => setIsLogoutModalOpen(false)}>Cancel</button>
+              <button className="btn-confirm" onClick={confirmLogout}>Logout</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
