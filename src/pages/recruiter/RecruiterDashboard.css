@@ -43,7 +43,7 @@
 .recruiter-welcome-banner {
   background: linear-gradient(135deg, var(--color-primary) 0%, #1e1b4b 100%);
   border-radius: var(--radius-xl);
-  padding: 2.5rem;
+  padding: 1.5rem;
   margin-bottom: 2rem;
   color: white;
   position: relative;
@@ -69,15 +69,15 @@
 }
 
 .recruiter-welcome-banner h2 {
-  font-size: 1.875rem;
-  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .recruiter-welcome-banner p {
-  font-size: 1.125rem;
+  font-size: 1rem;
   opacity: 0.9;
-  margin-bottom: 2rem;
-  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
 }
 
 .recruiter-welcome-banner__actions {
@@ -500,8 +500,30 @@
 }
 
 @media (max-width: 768px) {
+  .recruiter-dashboard {
+    padding: 1rem;
+  }
+
   .recruiter-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .recruiter-stat-card {
+    padding: 1rem;
+  }
+
+  .recruiter-stat-card__value {
+    font-size: 1.5rem;
+  }
+
+  .recruiter-stat-card__label {
+    font-size: 0.8125rem;
+  }
+
+  .recruiter-stat-card__icon {
+    width: 40px;
+    height: 40px;
   }
   
   .recruiter-job-card {

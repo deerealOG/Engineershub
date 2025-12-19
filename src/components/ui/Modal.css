@@ -20,7 +20,8 @@
   box-shadow: var(--shadow-xl);
   width: 100%;
   max-width: 600px;
-  max-height: 90vh;
+  max-height: 85vh;
+  margin: 1rem;
   overflow-y: auto;
   position: relative;
   transform: scale(0.95);
